@@ -25,14 +25,14 @@ IncludeTemplateLangFile(__FILE__);
 		
 	</style>
 	<![endif]-->
-
+	<meta property="specialdate" content="<?$APPLICATION->ShowProperty("specialdate",100);?>">
 	<title><?$APPLICATION->ShowTitle()?></title>
 </head>
 <body>
+<?echo $APPLICATION->GetPageProperty('specialdate')?>
 	<div id="page-wrapper">
 	<div id="panel"><?$APPLICATION->ShowPanel();?></div>
 		<div id="header">
-			
 			<table id="logo">
 				<tr>
 					<td><a href="<?=SITE_DIR?>" title="<?=GetMessage('CFT_MAIN')?>"><?
@@ -92,7 +92,6 @@ $APPLICATION->IncludeFile(
 		</div>
 		
 		<div id="content">
-		
 			<div id="sidebar">
 <?$APPLICATION->IncludeComponent("bitrix:menu", "left", array(
 	"ROOT_MENU_TYPE" => "left",
