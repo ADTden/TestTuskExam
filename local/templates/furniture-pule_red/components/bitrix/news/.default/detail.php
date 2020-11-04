@@ -36,6 +36,7 @@
 		"ELEMENT_ID" => $arResult["VARIABLES"]["ELEMENT_ID"],
 		"ELEMENT_CODE" => $arResult["VARIABLES"]["ELEMENT_CODE"],
 		"IBLOCK_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["news"],
+		"DISPLAY_REL_ID" => $arParams["DISPLAY_REL_ID"],
 	),
 	$component
 );?>

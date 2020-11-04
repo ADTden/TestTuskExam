@@ -27,9 +27,11 @@ IncludeTemplateLangFile(__FILE__);
 	<![endif]-->
 
 	<title><?$APPLICATION->ShowTitle()?></title>
+	<?$APPLICATION->ShowProperty("canonical_link");?>
 </head>
 <body>
 	<div id="page-wrapper">
+
 	<div id="panel"><?$APPLICATION->ShowPanel();?></div>
 		<div id="header">
 			

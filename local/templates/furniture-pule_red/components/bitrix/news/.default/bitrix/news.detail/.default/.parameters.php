@@ -22,5 +22,10 @@ $arTemplateParameters = array(
 		"TYPE" => "CHECKBOX",
 		"DEFAULT" => "Y",
 	),
+	"DISPLAY_REL_ID" => Array(
+		"NAME" => GetMessage("T_IBLOCK_DESC_REL"),
+		"TYPE" => "STRING",
+		"DEFAULT" => "",
+	),
 );
 ?>
