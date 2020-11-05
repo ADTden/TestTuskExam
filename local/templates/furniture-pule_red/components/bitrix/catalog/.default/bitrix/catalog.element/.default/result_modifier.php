@@ -20,4 +20,20 @@ if (!is_array($arResult['SECTION']))
 
 $arResult['PRICES']['PRICE']['PRINT_VALUE'] = number_format($arResult['PROPERTIES']['PRICE']['VALUE'], 0, '.', ' ');
 $arResult['PRICES']['PRICE']['PRINT_VALUE'] .= ' '.$arResult['PROPERTIES']['PRICECURRENCY']['VALUE_ENUM'];
+
+ 
+ $arSelect = Array("ID", "NAME", "PROPERTY_META_TITLE","PROPERTY_META_DESCRIPTION");
+$arFilter = Array("IBLOCK_ID"=>6, "NAME"=>$arResult['ORIGINAL_PARAMETERS']['CURRENT_BASE_PAGE'] );
+$res = CIBlockElement::GetList(Array(), $arFilter, false, Array("nPageSize"=>50), $arSelect);
+while($ob = $res->GetNextElement())
+{
+ $arFields = $ob->GetFields();
+
+ $APPLICATION->SetPageProperty('description',$arFields['PROPERTY_META_DESCRIPTION_VALUE']);
+ $APPLICATION->SetPageProperty('title',$arFields['PROPERTY_META_TITLE_VALUE']);
+
+}
+ 
 ?>
+
+
