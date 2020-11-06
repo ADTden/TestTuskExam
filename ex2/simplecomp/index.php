@@ -6,8 +6,8 @@ $APPLICATION->SetTitle("Простой компонент");
 	".default", 
 	array(
 		"CACHE_TIME" => "36000000",
-		"CACHE_TYPE" => "N",
-		"CODE_USER_PROP" => "",
+		"CACHE_TYPE" => "A",
+		"CODE_USER_PROP" => "UF_NEWS_LINK",
 		"ID_CATALOG" => "2",
 		"ID_NEWS" => "1",
 		"COMPONENT_TEMPLATE" => ".default"
