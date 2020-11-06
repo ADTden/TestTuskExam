@@ -9,21 +9,23 @@ if(!CModule::IncludeModule("iblock"))
 
 "ID_CATALOG" => array(
 "PARENT" => "BASE",
-"NAME" => "ID инфоблока с каталогом товаров",
+"NAME" => "ID инфоблока с новостями",
 "TYPE" => "STRING",
 "MULTIPLE" => "N",
 "DEFAULT" => "",
 ),
-"ID_NEWS" => array(
+
+"CODE_AUTHOR" => array(
 "PARENT" => "BASE",
-"NAME" => "ID инфоблока с классификатором",
+"NAME" => "Код свойства информационного блока, в котором хранится Автор",
 "TYPE" => "STRING",
 "MULTIPLE" => "N",
 "DEFAULT" => "",
 ),
+
 "CODE_USER_PROP" => array(
 "PARENT" => "BASE",
-"NAME" => "Код свойства товара, в котором хранится привязка товара к классификатору",
+"NAME" => "Код пользовательского свойства пользователей, в котором хранится тип автора",
 "TYPE" => "STRING",
 "MULTIPLE" => "N",
 "DEFAULT" => "",
@@ -31,13 +33,7 @@ if(!CModule::IncludeModule("iblock"))
 
 "CACHE_TIME"  =>  array("DEFAULT"=>36000000),
 		
-"DETAIL_URL" => CIBlockParameters::GetPathTemplateParam(
-			"DETAIL",
-			"DETAIL_URL",
-			"Шаблон ссылки на детальный просмотр товара",
-			"",
-			"URL_TEMPLATES"
-		),
+
 
 ),
 );

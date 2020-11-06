@@ -7,11 +7,12 @@ $APPLICATION->SetTitle("Простой компонент");
 	array(
 		"CACHE_TIME" => "36000000",
 		"CACHE_TYPE" => "A",
-		"CODE_USER_PROP" => "PROPERTY_FIRM",
-		"ID_CATALOG" => "2",
+		"CODE_USER_PROP" => "UF_AUTHOR_TYPE",
+		"ID_CATALOG" => "1",
 		"ID_NEWS" => "7",
 		"COMPONENT_TEMPLATE" => ".default",
-		"DETAIL_URL" => "/products/#SECTION_ID#/#ID#/"
+		"DETAIL_URL" => "/products/#SECTION_ID#/#ID#/",
+		"CODE_AUTHOR" => "PROPERTY_AUTHOR"
 	),
 	false
 );?><?require($_SERVER["DOCUMENT_ROOT"]."/bitrix/footer.php");?>
