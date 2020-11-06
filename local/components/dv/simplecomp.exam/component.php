@@ -39,7 +39,7 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		$id_sections = array();
 		$name_sections= array();
 
-        $res = CIBlockSection::GetList([], ['IBLOCK_ID' => $arParams["ID_CATALOG"], $arParams["CODE_USER_PROP"] => $row["ID"]], false, ['IBLOCK_ID', 'ID', "NAME", 'UF_NEWS_LINK']); //Получаем  разделоы привязанныу к новостям
+        $res = CIBlockSection::GetList([], ['IBLOCK_ID' => $arParams["ID_CATALOG"], $arParams["CODE_USER_PROP"] => $row["ID"] ,"ACTIVE"=>"Y"], false, ['IBLOCK_ID', 'ID', "NAME", 'UF_NEWS_LINK']); //Получаем  разделоы привязанныу к новостям
 		while($ress = $res->Fetch()){
 		$value = $ress["ID"];
 		$id_sections[]=$value;
