@@ -8,7 +8,7 @@
 	<br>
 	<?foreach($arItem["CATALOG_ITEMS"] as $arCatItem){?>
 		<div class="catalogs-item">
-			<div class="item"><?=$arCatItem["NAME"]?> - <?=$arCatItem["PROP"]["PRICE"]?> - <?=$arCatItem["PROP"]["MATERIAL"]?> - <?=$arCatItem["PROP"]["ARTNUMBER"]?></div>
+			<div class="item"><?=$arCatItem["NAME"]?> - <?=$arCatItem["PROP"]["PRICE"]?> - <?=$arCatItem["PROP"]["MATERIAL"]?> - <?=$arCatItem["PROP"]["ARTNUMBER"]?>   (<?=$arCatItem["DETAIL_URL"]?>)</div>
 		</div>
 	<?}?>
 </div>

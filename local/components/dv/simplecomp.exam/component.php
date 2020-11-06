@@ -56,14 +56,16 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		);
 	
 		$id1 =0;
-		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","NAME")); //Получаем элементы из разделов привязанных к новостям
-		while ($row1 = $rsElement1->Fetch())
+		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","IBLOCK_ID","CODE","NAME","IBLOCK_SECTION_ID",)); //Получаем элементы из разделов привязанных к новостям
+		$rsElement1->SetUrlTemplates($arParams["DETAIL_URL"]); //Применяем к ссылкам шаблон
+		while ($row1 = $rsElement1->GetNext())
 		{	
 			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
 			$prop=CIBlockElement::GetByID($row1["ID"])->GetNextElement()->GetProperties();
 			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["PRICE"] = $prop['PRICE']["VALUE"];
 			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
 			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
+			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
 			$id1=$id1+1;
 		}
 		unset($row);
