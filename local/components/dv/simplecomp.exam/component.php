@@ -19,6 +19,12 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 	Bitrix\Main\Loader,
 	Bitrix\Iblock;
 	
+	if($_REQUEST["F"]){
+		COption::SetOptionString("main", "component_cache_on", "N");
+	}else{
+		COption::SetOptionString("main", "component_cache_on", "Y");
+	}
+	
 	$arResult["COUNT_ITEMS"] = 0;
 	$arResult["ITEMS"] = array(); 
 	$arResult["ELEMENTS"] = array();
@@ -56,17 +62,26 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		);
 	
 		$id1 =0;
-		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","IBLOCK_ID","CODE","NAME","IBLOCK_SECTION_ID",)); //Получаем элементы из разделов привязанных к новостям
+		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","IBLOCK_ID","CODE","NAME","IBLOCK_SECTION_ID","DISPLAY_PROPERTIES")); //Получаем элементы из разделов привязанных к новостям
 		$rsElement1->SetUrlTemplates($arParams["DETAIL_URL"]); //Применяем к ссылкам шаблон
 		while ($row1 = $rsElement1->GetNext())
-		{	
-			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
-			$prop=CIBlockElement::GetByID($row1["ID"])->GetNextElement()->GetProperties();
-			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["PRICE"] = $prop['PRICE']["VALUE"];
-			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
-			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
-			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
-			$id1=$id1+1;
+		{	$prop=CIBlockElement::GetByID($row1["ID"])->GetNextElement()->GetProperties();
+			if($_REQUEST["F"] ){
+				if($prop['PRICE']["VALUE"] <= 1700 && $prop['MATERIAL']["VALUE"] == "Дерево, ткань" || $prop['PRICE']["VALUE"] < 1500 && $prop['MATERIAL']["VALUE"]=="Металл, пластик" ){
+					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
+					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["PRICE"] = $prop['PRICE']["VALUE"];
+					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
+					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
+					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
+				}
+				$id1=$id1+1;}else{
+				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
+				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["PRICE"] = $prop['PRICE']["VALUE"];
+				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
+				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
+				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
+				$id1=$id1+1;
+			}
 		}
 		unset($row);
 		

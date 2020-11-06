@@ -1,6 +1,7 @@
 <? if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
  
 ?>
+Фильтр: <a href="/ex2/simplecomp/?F=Y">/ex2/simplecomp/?F=Y</a>
 <?foreach($arResult["ITEMS"] as $arItem){?>
 <div class="main-item">
 	<br>
