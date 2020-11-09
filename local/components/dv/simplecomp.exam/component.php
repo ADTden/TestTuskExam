@@ -40,16 +40,7 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		$id = (int)$row['ID'];
 		$arResult["ITEMS"][$id] = $row;
 		$arResult["ELEMENTS"][] = $id;
-		
-		$arButtons = CIBlock::GetPanelButtons(
-			$row["IBLOCK_ID"],
-			$row["ID"],
-			0,
-				array("SECTION_BUTTONS"=>false, "SESSID"=>false)
-			);
-			$arResult["ITEMS"][$id]["EDIT_LINK"] = $arButtons["edit"]["edit_element"]["ACTION_URL"];
-			$arResult["ITEMS"][$id]["DELETE_LINK"] = $arButtons["edit"]["delete_element"]["ACTION_URL"];
-		
+
 		$id_sections = array();
 		$name_sections= array();
 
@@ -75,12 +66,6 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		while ($row1 = $rsElement1->GetNext())
 		{	$prop=CIBlockElement::GetByID($row1["ID"])->GetNextElement()->GetProperties();
 			
-			$arButtons1 = CIBlock::GetPanelButtons(
-			$row1["IBLOCK_ID"],
-			$row1["ID"],
-			0,
-				array("SECTION_BUTTONS"=>false, "SESSID"=>false)
-			);
 			
 			if($_REQUEST["F"] ){
 				if($prop['PRICE']["VALUE"] <= 1700 && $prop['MATERIAL']["VALUE"] == "Дерево, ткань" || $prop['PRICE']["VALUE"] < 1500 && $prop['MATERIAL']["VALUE"]=="Металл, пластик" ){
@@ -89,11 +74,7 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
 					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
 					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
-
-		
-					//$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["EDIT_LINK"] = $arButtons1["edit"]["edit_element"]["ACTION_URL"];
-					//$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DELETE_LINK"] = $arButtons1["edit"]["delete_element"]["ACTION_URL"];
-					// удаление и изменение  для товаров
+			
 				}
 				}else{
 					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
@@ -101,8 +82,7 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
 					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
 					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
-					
-					
+
 				}
 			
 			$id1=$id1+1;
