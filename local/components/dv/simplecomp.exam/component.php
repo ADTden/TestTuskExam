@@ -6,7 +6,6 @@ $arResult['ID_CATALOG'] = $arParams["ID_CATALOG"];
 $arResult['ID_NEWS'] = $arParams["ID_NEWS"];
 $arResult['CODE_USER_PROP'] = $arParams["CODE_USER_PROP"];
 $arResult['ID_CATALOG'] = date($arParams["ID_CATALOG"]);
-
 //Режим редактирования включён?
 if ($APPLICATION->GetShowIncludeAreas())
 {
@@ -53,7 +52,9 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		"ACTIVE" => "Y",
 		"CHECK_PERMISSIONS" => $arParams['CHECK_PERMISSIONS'] ? "Y" : "N",
 	);
-	$rsElement = CIBlockElement::GetList($arSort, $arFilter , false, false, array("ID","NAME","DATE_ACTIVE_FROM")); //Получаем Элементы инфоблока новости
+	$rsElement = CIBlockElement::GetList($arSort, $arFilter , false, array("nPageSize" => $arParams['NEWS_COUNT']), array("ID","NAME","DATE_ACTIVE_FROM")); //Получаем Элементы инфоблока новости
+	$rsElement->NavStart($arParams['NEWS_COUNT']);
+	$arResult['NAV'] = $rsElement;
 	while ($row = $rsElement->Fetch())
 	{
 		$id = (int)$row['ID'];
@@ -106,15 +107,18 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 			
 			$id1=$id1+1;
 		}
-		unset($row);
+		unset($row1);
 		
 		$count=count($arResult["ITEMS"][$id]["CATALOG_ITEMS"]);
 		$arResult["COUNT_ITEMS"] = $arResult["COUNT_ITEMS"] + $count;
 		
 	}
+	
+	
 	unset($row);
 
 	$arResult['ITEMS'] = array_values($arResult['ITEMS']);
+
 	
 	$APPLICATION->SetTitle("В каталоге товаров представлено товаров: [".$arResult["COUNT_ITEMS"]."]");
 	

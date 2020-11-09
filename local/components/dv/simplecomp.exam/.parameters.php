@@ -7,26 +7,38 @@ if(!CModule::IncludeModule("iblock"))
 
 
 "ID_CATALOG" => array(
-"PARENT" => "BASE",
-"NAME" => "ID инфоблока с каталогом товаров",
-"TYPE" => "STRING",
-"MULTIPLE" => "N",
-"DEFAULT" => "",
+	"PARENT" => "BASE",
+	"NAME" => "ID инфоблока с каталогом товаров",
+	"TYPE" => "STRING",
+	"MULTIPLE" => "N",
+	"DEFAULT" => "",
 ),
 "ID_NEWS" => array(
-"PARENT" => "BASE",
-"NAME" => "ID инфоблока с новостями",
-"TYPE" => "STRING",
-"MULTIPLE" => "N",
-"DEFAULT" => "",
+	"PARENT" => "BASE",
+	"NAME" => "ID инфоблока с новостями",
+	"TYPE" => "STRING",
+	"MULTIPLE" => "N",
+	"DEFAULT" => "",
 ),
+"NEWS_COUNT" => array(
+	"PARENT" => "BASE",
+	"NAME" => GetMessage("T_IBLOCK_DESC_LIST_CONT"),
+	"TYPE" => "STRING",
+	"DEFAULT" => "20",
+		),
 "CODE_USER_PROP" => array(
-"PARENT" => "BASE",
-"NAME" => "Код пользовательского свойства разделов каталога, в котором хранится привязка к новостям",
-"TYPE" => "STRING",
-"MULTIPLE" => "N",
-"DEFAULT" => "",
+	"PARENT" => "BASE",
+	"NAME" => "Код пользовательского свойства разделов каталога, в котором хранится привязка к новостям",
+	"TYPE" => "STRING",
+	"MULTIPLE" => "N",
+	"DEFAULT" => "",
 ),
+"NEWS_COUNT" => array(
+			"PARENT" => "BASE",
+			"NAME" => "Количество новостей на странице",
+			"TYPE" => "STRING",
+			"DEFAULT" => "20",
+		),
 
 "CACHE_TIME"  =>  array("DEFAULT"=>36000000),
 		

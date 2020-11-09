@@ -133,14 +133,17 @@ $APPLICATION->IncludeComponent("bitrix:search.form", "flat", Array(
 ),
 	false
 );
+
 ?>
+
 					</div>
 				</div>
-
+<?php $APPLICATION->ShowViewContent('var-x') ?>
 				<div class="information-block">
 					<div class="top"></div>
 					<div class="information-block-inner">
 						<h3><?=GetMessage('CFT_FEATURED')?></h3>
+						
 <?
 $APPLICATION->IncludeFile(
 	SITE_DIR."include/random.php",
