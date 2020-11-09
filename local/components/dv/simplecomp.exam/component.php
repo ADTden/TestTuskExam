@@ -7,6 +7,25 @@ $arResult['ID_NEWS'] = $arParams["ID_NEWS"];
 $arResult['CODE_USER_PROP'] = $arParams["CODE_USER_PROP"];
 $arResult['ID_CATALOG'] = date($arParams["ID_CATALOG"]);
 
+//Режим редактирования включён?
+if ($APPLICATION->GetShowIncludeAreas())
+{
+	
+$this->AddIncludeAreaIcons(
+	Array( //массив кнопок toolbar'a
+		Array(
+			"ID" => "Идентификатор кнопки",
+			"TITLE" => "ИБ в админке",
+			"URL" => "http://testtusk/bitrix/admin/iblock_element_admin.php?IBLOCK_ID=".$arParams["ID_NEWS"]."&type=news&lang=ru&apply_filter=Y", //или javascript:MyJSFunction ()
+			"ICON" => "menu-delete", //CSS-класс с иконкой
+			"IN_PARAMS_MENU" => true, //показать в контекстном меню
+			"IN_MENU" => false //показать в подменю компонента
+		)
+	)
+);
+
+}
+
 
 if(!isset($arParams["CACHE_TIME"]))
 	$arParams["CACHE_TIME"] = 36000000;
