@@ -15,6 +15,14 @@ AddEventHandler("main", "OnBeforeEventAdd", "onBeforeEventAdd");
 	}
 
 
+AddEventHandler("iblock", "OnBeforeIBlockElementUpdate", "OnBeforeIBlockElementUpdateHandler");
+
+
+    function OnBeforeIBlockElementUpdateHandler(&$arFields) {
+        if ($arFields['IBLOCK_ID'] == 3) {
+            CBitrixComponent::clearComponentCache('dv:simplecomp.exam');
+        }
+    }
 
 
 ?>

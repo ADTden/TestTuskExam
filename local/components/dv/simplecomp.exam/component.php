@@ -6,6 +6,7 @@ $arResult['ID_CATALOG'] = $arParams["ID_CATALOG"];
 $arResult['ID_NEWS'] = $arParams["ID_NEWS"];
 $arResult['CODE_USER_PROP'] = $arParams["CODE_USER_PROP"];
 $arResult['ID_CATALOG'] = date($arParams["ID_CATALOG"]);
+$bUSER_HAVE_ACCESS = true;
 //Режим редактирования включён?
 if ($APPLICATION->GetShowIncludeAreas())
 {
@@ -43,6 +44,10 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		COption::SetOptionString("main", "component_cache_on", "Y");
 	}
 	
+	if($arNavigation["PAGEN"]==0 && $arParams["PAGER_DESC_NUMBERING_CACHE_TIME"]>0)
+		$arParams["CACHE_TIME"] = $arParams["PAGER_DESC_NUMBERING_CACHE_TIME"];
+	if ($this->StartResultCache())
+	{
 	$arResult["COUNT_ITEMS"] = 0;
 	$arResult["ITEMS"] = array(); 
 	$arResult["ELEMENTS"] = array();
@@ -52,9 +57,16 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		"ACTIVE" => "Y",
 		"CHECK_PERMISSIONS" => $arParams['CHECK_PERMISSIONS'] ? "Y" : "N",
 	);
+	
+	
+	
 	$rsElement = CIBlockElement::GetList($arSort, $arFilter , false, array("nPageSize" => $arParams['NEWS_COUNT']), array("ID","NAME","DATE_ACTIVE_FROM")); //Получаем Элементы инфоблока новости
 	$rsElement->NavStart($arParams['NEWS_COUNT']);
 	$arResult['NAV'] = $rsElement;
+	if ($arParams["ID"] <= 0)
+		$arParams["ID"] = 10;
+	
+   
 	while ($row = $rsElement->Fetch())
 	{
 		$id = (int)$row['ID'];
@@ -110,17 +122,22 @@ $arParams["ID_CATALOG"] = intval($arParams["ID_CATALOG"]);
 		unset($row1);
 		
 		$count=count($arResult["ITEMS"][$id]["CATALOG_ITEMS"]);
-		$arResult["COUNT_ITEMS"] = $arResult["COUNT_ITEMS"] + $count;
+	$arResult["COUNT_ITEMS"] = $arResult["COUNT_ITEMS"] + $count;
+	$APPLICATION->SetTitle("В каталоге товаров представлено товаров: [".$arResult["COUNT_ITEMS"]."]");
 		
 	}
-	
+	   
+
 	
 	unset($row);
-
+  
 	$arResult['ITEMS'] = array_values($arResult['ITEMS']);
 
+  	 
 	
-	$APPLICATION->SetTitle("В каталоге товаров представлено товаров: [".$arResult["COUNT_ITEMS"]."]");
+	
 	
 $this->IncludeComponentTemplate();
+}
+	
 ?>

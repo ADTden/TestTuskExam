@@ -1,5 +1,6 @@
 <? if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();?>
-
+<?echo time();?>
+<br>
 Фильтр: <a href="/ex2/simplecomp/?F=Y">/ex2/simplecomp/?F=Y</a>
 
 <?foreach($arResult["ITEMS"] as $arItem){?>
@@ -16,6 +17,7 @@
 </div>
 <?=$arResult["NAV_STRING"]?>
 <?}?>
+
 <?$navStr = $arResult['NAV']->GetPageNavStringEx($navComponentObject, "Страницы:", "");?>
 	<br /><?=$navStr;?>
 
