@@ -123,7 +123,20 @@ $APPLICATION->IncludeFile(
 ?>
 					</div>
 				</div>
-				
+				<div class="content-block">
+				<div class="content-block-inner">
+					<h3>Смена языка</h3>
+						<?$APPLICATION->IncludeComponent(
+							"dv:simplecomp.changeLng",
+							"",
+							Array(
+								"CACHE_TIME" => "36000000",
+								"CACHE_TYPE" => "A",
+								"NEWS_COUNT" => "20"
+							)
+						);?>
+				</div>
+			</div>
 				<div class="content-block">
 					<div class="content-block-inner">
 						
