@@ -17,21 +17,16 @@ if($arParams["USE_FILTER"]=="Y")
 else
 	$arParams["FILTER_NAME"] = "";
 
-$arParams["PARAM1"] = 123;
-$arParams["PARAM2"] = 456;
 
 $arDefaultUrlTemplates404 = array(
 	"sections_top" => "",
 	"section" => "#SECTION_ID#/",
-	"detail" => "#SECTION_ID#/?PARAM2=#ELEMENT_ID#/",
-	"examapage" => "#SECTION_ID#/?PARAM2=#ELEMENT_ID#/",
+	"exampage" => "new/#PARAM1#/?PARAM2=#PARAM2#",
+	"detail" => "#SECTION_ID#/?#ELEMENT_ID#/",
+	
 );
 
-$arDefaultVariableAliases404 = array(
-"element" => array(
-    "SECTION_ID" => $arResult["PARAM1"]
-    )
-);
+$arDefaultVariableAliases404 = array();
 
 $arDefaultVariableAliases = array();
 
@@ -40,6 +35,8 @@ $arComponentVariables = array(
 	"SECTION_CODE",
 	"ELEMENT_ID",
 	"ELEMENT_CODE",
+	"PARAM1",
+	"PARAM2",
 );
 
 if($arParams["SEF_MODE"] == "Y")
@@ -121,6 +118,8 @@ else
 		$componentPage = "section";
 	elseif(isset($arVariables["SECTION_CODE"]) && strlen($arVariables["SECTION_CODE"]) > 0)
 		$componentPage = "section";
+	elseif(isset($arVariables["PARAM1"]) > 0)
+		$componentPage = "exampage";
 	else
 		$componentPage = "sections_top";
 
@@ -129,7 +128,7 @@ else
 		"URL_TEMPLATES" => Array(
 			"section" => htmlspecialcharsbx($APPLICATION->GetCurPage())."?".$arVariableAliases["SECTION_ID"]."=#SECTION_ID#",
 			"detail" => htmlspecialcharsbx($APPLICATION->GetCurPage())."?".$arVariableAliases["SECTION_ID"]."=#SECTION_ID#"."&".$arVariableAliases["ELEMENT_ID"]."=#ELEMENT_ID#",
-			"examapage" =>htmlspecialcharsbx($APPLICATION->GetCurPage())."?".$arVariableAliases["SECTION_ID"]."=#SECTION_ID#"."&".$arVariableAliases["ELEMENT_ID"]."=#ELEMENT_ID#",
+			"exampage" => htmlspecialcharsbx($APPLICATION->GetCurPage())."?".$arVariableAliases["PARAM1"]."=#PARAM1#"."&".$arVariableAliases["PARAM2"]."=#PARAM2#",
 		),
 		"VARIABLES" => $arVariables,
 		"ALIASES" => $arVariableAliases

@@ -14,12 +14,11 @@ $this->setFrameMode(true);
 ?>
 <?
 //ссылка на страницу станицу exampage 
-//$url = ...
+
+$url = str_replace("#PARAM1#","123", $arResult["URL_TEMPLATES"]["exampage"]);
+$url = str_replace("#PARAM2#","456", $url);
 ?><?=GetMessage("EXAM_TEXT_LINK_CP_PHOTO")?> <a href="<?=$url?>"><?=$url?></a>  
 
-<pre>
-<?print_r($component);?>
-</pre>
 
 <?$APPLICATION->IncludeComponent(
 	"bitrix:photo.sections.top",
@@ -46,6 +45,7 @@ $this->setFrameMode(true);
 
 		"SECTION_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["section"],
 		"DETAIL_URL" => $arResult["FOLDER"].$arResult["URL_TEMPLATES"]["detail"],
+
 	),
 	$component
 );
