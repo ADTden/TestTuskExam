@@ -17,7 +17,7 @@ class CDemoSqr extends CBitrixComponent
         return $result;
     }
 
-    public function sqr($id_catalog,$CODE_USER_PROP,$id_news)
+    public function makeArResult($id_catalog,$CODE_USER_PROP,$id_news)
     {
 		$arResult["COUNT_ITEMS"] = 0;
 		$arResult["ITEMS"] = array(); 
