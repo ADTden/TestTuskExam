@@ -1,11 +1,15 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true)die();
+$cp = $this->__component; // объект компонента
 
-$arSelect = Array("ID", "NAME");
-$arFilter = Array("IBLOCK_ID"=>$APPLICATION->GetProperty('canonical_id'), "PROPERTY_NEWS"=>$arResult["ID"], "ACTIVE"=>"Y");
-$res = CIBlockElement::GetList(Array(), $arFilter, false, Array(false), $arSelect);
-while($ob = $res->GetNextElement())
+if (is_object($cp))
 {
- $arFields = $ob->GetFields();
- $APPLICATION->SetPageProperty("canonical_link","<link rel='canonical' href=".$arFields["NAME"].">");
+   // добавим в arResult компонента поля
+   $cp->arResult['ID_CANONICAL'] = $arResult["ID"];
+   $cp->SetResultCacheKeys(array('ID_CANONICAL'));
+
+   // сохраним их в копии arResult, с которой работает шаблон
+   $arResult['ID_CANONICAL'] = $cp->arResult['ID_CANONICAL'];
 }
+
+
 ?> 
