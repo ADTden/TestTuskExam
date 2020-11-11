@@ -7,7 +7,7 @@ if(!CModule::IncludeModule("iblock"))
 "PARAMETERS" => array(
 
 
-"ID_CATALOG" => array(
+"ID_NEWS" => array(
 "PARENT" => "BASE",
 "NAME" => "ID инфоблока с новостями",
 "TYPE" => "STRING",

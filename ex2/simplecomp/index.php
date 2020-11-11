@@ -9,7 +9,7 @@ $APPLICATION->SetTitle("Простой компонент");
 		"CACHE_TYPE" => "A",
 		"CODE_USER_PROP" => "UF_AUTHOR_TYPE",
 		"ID_CATALOG" => "1",
-		"ID_NEWS" => "7",
+		"ID_NEWS" => "1",
 		"COMPONENT_TEMPLATE" => ".default",
 		"DETAIL_URL" => "/products/#SECTION_ID#/#ID#/",
 		"CODE_AUTHOR" => "PROPERTY_AUTHOR"
