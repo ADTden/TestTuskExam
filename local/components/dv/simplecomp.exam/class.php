@@ -35,12 +35,7 @@ class CDemoSqr extends CBitrixComponent
 		"ACTIVE" => "Y",
 		"CHECK_PERMISSIONS" => $arParams['CHECK_PERMISSIONS'] ? "Y" : "N",
 		
-		);
-
-		
-
-
-
+			);
 
 
 
@@ -54,7 +49,7 @@ class CDemoSqr extends CBitrixComponent
 			$arResult["ELEMENTS"][] = $id;	
 
 		}
-
+		
 
 		//создаем массив разделов привязанных к новостям
 
@@ -83,47 +78,47 @@ class CDemoSqr extends CBitrixComponent
 			);
 		
 			
-			$catalogItems = array();
-			$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","NAME",'PROPERTY_PRICE','PROPERTY_ARTNUMBER','PROPERTY_MATERIAL',"IBLOCK_SECTION_ID")); //Получаем элементы из разделов привязанных к новостям
-			while ($row1 = $rsElement1->Fetch())
-			{	
+		$catalogItems = array();
+		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","NAME",'PROPERTY_PRICE','PROPERTY_ARTNUMBER','PROPERTY_MATERIAL',"IBLOCK_SECTION_ID")); //Получаем элементы из разделов привязанных к новостям
+		while ($row1 = $rsElement1->Fetch())
+		{	
 
-				$catalogItems[]=$row1;
+			$catalogItems[]=$row1;
 				
-			}
+		}
 
 
 
 			//формируем итоговый массив
 
 
-			foreach ($arResult["ITEMS"] as $key => $value)
-			{
-				foreach($catalogItems as $key => $value1)
-				{ 
-					if(in_array($value1["IBLOCK_SECTION_ID"], $value['ID_SETCOIN']))
-					$arResult["ITEMS"][$value["ID"]]['CATALOG_ITEMS'][] = $value1;
-				}
+		foreach ($arResult["ITEMS"] as $key => $value)
+		{
+			foreach($catalogItems as $key => $value1)
+			{ 
+				if(in_array($value1["IBLOCK_SECTION_ID"], $value['ID_SETCOIN']))
+				$arResult["ITEMS"][$value["ID"]]['CATALOG_ITEMS'][] = $value1;
 			}
+		}
 
-			//количесвто выводимых элементов каталога.
-			$arResult['COUNT_ITEMS'] = count($catalogItems);
+		//количесвто выводимых элементов каталога.
+		$arResult['COUNT_ITEMS'] = count($catalogItems);
 			
 
-			return $arResult;
+		return $arResult;
 	}
 	
 	public function executeComponent()
-   			 {	
-				if($this->startResultCache()){
-					
-					$this->arResult = $this->makeArResult($this->arParams["ID_CATALOG"],$this->arParams["CODE_USER_PROP"],$this->arParams["ID_NEWS"]);
-					$this->IncludeComponentTemplate();
-				}
+   	 {	
+		if($this->startResultCache())
+		{
+			$this->arResult = $this->makeArResult($this->arParams["ID_CATALOG"],$this->arParams["CODE_USER_PROP"],$this->arParams["ID_NEWS"]);
+			$this->IncludeComponentTemplate();
+		}
 
-				global $APPLICATION;
-				$APPLICATION->SetTitle("В каталоге товаров представлено товаров: [".$this->arResult["COUNT_ITEMS"]."]");	
-				return $this->arResult;
-			}
+		global $APPLICATION;
+		$APPLICATION->SetTitle("В каталоге товаров представлено товаров: [".$this->arResult["COUNT_ITEMS"]."]");	
+		return $this->arResult;
+	}
 
 }
