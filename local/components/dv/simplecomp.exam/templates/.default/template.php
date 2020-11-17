@@ -13,5 +13,3 @@
 	<?}?>
 </div>
 <?}?>	
-<pre>
-<?print_r($arResult)?>
