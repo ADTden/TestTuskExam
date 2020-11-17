@@ -18,10 +18,6 @@ class CDemoSqr extends CBitrixComponent
 		
     }
 
-
-	
-
-
 	
 
     public function makeArNews($id_news)
