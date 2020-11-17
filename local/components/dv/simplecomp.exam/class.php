@@ -1,5 +1,5 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
-
+ $arResult = array();
 class CDemoSqr extends CBitrixComponent
 {
     //Родительский метод проходит по всем параметрам переданным в $APPLICATION->IncludeComponent
@@ -22,9 +22,9 @@ class CDemoSqr extends CBitrixComponent
 	
 
 
+	
 
-
-    public function makeArResult($id_catalog,$CODE_USER_PROP,$id_news)
+    public function makeArNews($id_news)
     {
 		$arResult["COUNT_ITEMS"] = 0;
 		$arResult["ITEMS"] = array(); 
@@ -49,31 +49,37 @@ class CDemoSqr extends CBitrixComponent
 			$arResult["ELEMENTS"][] = $id;	
 
 		}
+		return $arResult;
 		
+	}
+
 
 		//создаем массив разделов привязанных к новостям
+	public function makeArSections($id_catalog,$CODE_USER_PROP,$arResult)
+	{
 
-		$sectionsId = array();
-
-		$res = CIBlockSection::GetList([], ['IBLOCK_ID' => $id_catalog, $CODE_USER_PROP => $arResult["ELEMENTS"] ,"ACTIVE"=>"Y"], false, ['IBLOCK_ID', 'ID', "NAME", 'UF_NEWS_LINK']); //Получаем  разделоы привязанныу к новостям
+		$res = CIBlockSection::GetList([], ['IBLOCK_ID' => $id_catalog, $CODE_USER_PROP => $arResult["ELEMENTS"] ,"ACTIVE"=>"Y"], false, ['IBLOCK_ID', 'ID', "NAME", $CODE_USER_PROP]); //Получаем  разделоы привязанныу к новостям
 		while($ress = $res->Fetch())
 		{
 			foreach ($ress[$CODE_USER_PROP] as $key => $value) {
 				$arResult["ITEMS"][$value]["ID_SETCOIN"][]=$ress["ID"];
 				$arResult["ITEMS"][$value]["NAME_SECTION"][]=$ress["NAME"];
 			}
-			$sectionsId[] =$ress["ID"];
+			$arResult["SECTIONS"][] =$ress["ID"];
 		};
+		return $arResult;
+	}
 
 
 
-
+	public function mexidAr($id_catalog,$arResult)
+	{
 		//создаем массив из элементов из этих расделов
 
 		$arrFilter = array (
-			"IBLOCK_ID" =>$arParams["ID_CATALOG"],
+			"IBLOCK_ID" =>$id_catalog,
 			"IBLOCK_LID" => SITE_ID,
-			"SECTION_ID"=>$sectionsId,
+			"SECTION_ID"=>$arResult["SECTIONS"],
 			"ACTIVE" => "Y",
 			);
 		
@@ -83,18 +89,19 @@ class CDemoSqr extends CBitrixComponent
 		while ($row1 = $rsElement1->Fetch())
 		{	
 
-			$catalogItems[]=$row1;
+			$arResult["CATALOG_ITEMS"][]=$row1;
 				
 		}
-
-
+		return $arResult;
+	}
 
 			//формируем итоговый массив
 
-
+	public function makeFinalAr($arResult)
+	{
 		foreach ($arResult["ITEMS"] as $key => $value)
 		{
-			foreach($catalogItems as $key => $value1)
+			foreach($arResult["CATALOG_ITEMS"] as $key => $value1)
 			{ 
 				if(in_array($value1["IBLOCK_SECTION_ID"], $value['ID_SETCOIN']))
 				$arResult["ITEMS"][$value["ID"]]['CATALOG_ITEMS'][] = $value1;
@@ -102,7 +109,7 @@ class CDemoSqr extends CBitrixComponent
 		}
 
 		//количесвто выводимых элементов каталога.
-		$arResult['COUNT_ITEMS'] = count($catalogItems);
+		$arResult['COUNT_ITEMS'] = count($arResult["CATALOG_ITEMS"]);
 			
 
 		return $arResult;
@@ -112,7 +119,10 @@ class CDemoSqr extends CBitrixComponent
    	 {	
 		if($this->startResultCache())
 		{
-			$this->arResult = $this->makeArResult($this->arParams["ID_CATALOG"],$this->arParams["CODE_USER_PROP"],$this->arParams["ID_NEWS"]);
+			$this->arResult = $this->makeArNews($this->arParams["ID_NEWS"]);
+			$this->arResult = $this->makeArSections($this->arParams["ID_CATALOG"],$this->arParams["CODE_USER_PROP"],$this->arResult);
+			$this->arResult = $this->mexidAr($this->arParams["ID_CATALOG"],$this->arResult);
+			$this->arResult = $this->makeFinalAr($this->arResult);
 			$this->IncludeComponentTemplate();
 		}
 
