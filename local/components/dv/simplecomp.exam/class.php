@@ -1,5 +1,5 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
-
+ $arResult = array();
 class CDemoSqr extends CBitrixComponent
 {
     //Родительский метод проходит по всем параметрам переданным в $APPLICATION->IncludeComponent
@@ -13,14 +13,15 @@ class CDemoSqr extends CBitrixComponent
             "ID_CATALOG" => intval($arParams["ID_CATALOG"]),
 			"CODE_USER_PROP" => $arParams["CODE_USER_PROP"],
 			"ID_NEWS" => intval($arParams["ID_NEWS"]),
-			"DETAIL_URL"=>$arParams["DETAIL_URL"],
-			"F"=>$arParams["F"],
-			
+			"DETAIL_URL" => $arParams["DETAIL_URL"],
         );
-        return $result;
+		return $result;
+		
     }
 
-    public function makeArResult($id_catalog,$CODE_USER_PROP,$id_news,$detail_url,$f)
+	
+
+    public function makeArNews($id_news)
     {
 		$arResult["COUNT_ITEMS"] = 0;
 		$arResult["ITEMS"] = array(); 
@@ -30,67 +31,131 @@ class CDemoSqr extends CBitrixComponent
 		"IBLOCK_LID" => SITE_ID,
 		"ACTIVE" => "Y",
 		"CHECK_PERMISSIONS" => $arParams['CHECK_PERMISSIONS'] ? "Y" : "N",
-	);
-	$rsElement = CIBlockElement::GetList($arSort, $arFilter , false, false, array("ID","NAME","DATE_ACTIVE_FROM")); //Получаем Элементы инфоблока новости
-	while ($row = $rsElement->Fetch())
-	{
-		$id = (int)$row['ID'];
-		$arResult["ITEMS"][$id] = $row;
-		$arResult["ELEMENTS"][] = $id;
 		
-		
-		$id_sections = array();
-		$name_sections= array();
+			);
 
-        $res = CIBlockSection::GetList([], ['IBLOCK_ID' => $id_catalog, $CODE_USER_PROP => $row["ID"] ,"ACTIVE"=>"Y"], false, ['IBLOCK_ID', 'ID', "NAME", 'UF_NEWS_LINK']); //Получаем  разделоы привязанныу к новостям
-		while($ress = $res->Fetch()){
-		$value = $ress["ID"];
-		$id_sections[]=$value;
-		$name_sections[]=$ress["NAME"];
-		};
-		
-		$arResult["ITEMS"][$id]["CATALOG_SECTIONS"] = $name_sections;
-		
-		$arrFilter = array (
-		"IBLOCK_ID" =>$arResult['ID_CATALOG'],
-		"IBLOCK_LID" => SITE_ID,
-		"SECTION_ID"=>$id_sections,
-		"ACTIVE" => "Y",
-		);
-	
-		$id1 =0;
-		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","IBLOCK_ID","CODE","NAME","IBLOCK_SECTION_ID","DETAIL_PAGE_URL")); //Получаем элементы из разделов привязанных к новостям
-		$rsElement1->SetUrlTemplates($detail_url); //Применяем к ссылкам шаблон
-		echo $arParams["DETAIL_URL"];
-		while ($row1 = $rsElement1->GetNext())	
-		{	$prop=CIBlockElement::GetByID($row1["ID"])->GetNextElement()->GetProperties();
-			if($f){
-				if($prop['PRICE']["VALUE"] <= 1700 && $prop['MATERIAL']["VALUE"] == "Дерево, ткань" || $prop['PRICE']["VALUE"] < 1500 && $prop['MATERIAL']["VALUE"]=="Металл, пластик" ){
-					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
-					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["PRICE"] = $prop['PRICE']["VALUE"];
-					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
-					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
-					$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
-				}
-				$id1=$id1+1;
-				}else{
-				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
-				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["PRICE"] = $prop['PRICE']["VALUE"];
-				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["ARTNUMBER"] = $prop['ARTNUMBER']["VALUE"];
-				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["PROP"]["MATERIAL"] = $prop['MATERIAL']["VALUE"];
-				$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
-				$id1=$id1+1;
-			}
+
+
+		//создаем массив из элементов новостей
+
+		$rsElement = CIBlockElement::GetList($arSort, $arFilter , false, false, array("ID","NAME","DATE_ACTIVE_FROM","PROPERTY_*")); //Получаем Элементы инфоблока новости
+		while ($row = $rsElement->Fetch())
+		{
+			$id = (int)$row['ID'];
+			$arResult["ITEMS"][$id] = $row;
+			$arResult["ELEMENTS"][] = $id;	
+
 		}
-		unset($row);
-		
-		$count=count($arResult["ITEMS"][$id]["CATALOG_ITEMS"]);
-		$arResult["COUNT_ITEMS"] = $arResult["COUNT_ITEMS"] + $count;
+		return $arResult;
 		
 	}
+
+
+		//создаем массив разделов привязанных к новостям
+	public function makeArSections($id_catalog,$CODE_USER_PROP,$arResult)
+	{
+
+		$res = CIBlockSection::GetList([], ['IBLOCK_ID' => $id_catalog, $CODE_USER_PROP => $arResult["ELEMENTS"] ,"ACTIVE"=>"Y"], false, ['IBLOCK_ID', 'ID', "NAME", $CODE_USER_PROP]); //Получаем  разделоы привязанныу к новостям
+		while($ress = $res->Fetch())
+		{
+			foreach ($ress[$CODE_USER_PROP] as $key => $value) {
+				$arResult["ITEMS"][$value]["ID_SETCOIN"][]=$ress["ID"];
+				$arResult["ITEMS"][$value]["NAME_SECTION"][]=$ress["NAME"];
+			}
+			$arResult["SECTIONS"][] =$ress["ID"];
+		};
+		return $arResult;
+	}
+
+
+
+	public function mexidAr($id_catalog,$arResult,$detail_url)
+	{
+		//создаем массив из элементов из этих расделов
+
+		$arrFilter = array (
+			"IBLOCK_ID" =>$id_catalog,
+			"IBLOCK_LID" => SITE_ID,
+			"SECTION_ID"=>$arResult["SECTIONS"],
+			"ACTIVE" => "Y",
+			);
+		
+			
+		$catalogItems = array();
+		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","NAME",'PROPERTY_PRICE','PROPERTY_ARTNUMBER','PROPERTY_MATERIAL',"IBLOCK_SECTION_ID","DETAIL_PAGE_URL")); 
+		//Получаем элементы из разделов привязанных к новостям
+		$rsElement1->SetUrlTemplates($detail_url);
+		while ($row1 = $rsElement1->GetNext())
+		{
+
+			$arResult["CATALOG_ITEMS"][]=$row1;
+				
+		}
+		return $arResult;
+	}
+
+			//формируем итоговый массив
+
+	public function makeFinalAr($arResult)
+	{
+		foreach ($arResult["ITEMS"] as $key => $value)
+		{
+			foreach($arResult["CATALOG_ITEMS"] as $key => $value1)
+			{ 
+				if(in_array($value1["IBLOCK_SECTION_ID"], $value['ID_SETCOIN']))
+				$arResult["ITEMS"][$value["ID"]]['CATALOG_ITEMS'][] = $value1;
+			}
+		}
+
+		//количесвто выводимых элементов каталога.
+		$arResult['COUNT_ITEMS'] = count($arResult["CATALOG_ITEMS"]);
+			
+
+		return $arResult;
+	}
+
+
+	public function Filter_F($arResult)
+	{	$count=0;
+		foreach ($arResult["ITEMS"] as $key => $value)
+		{	$arFilterItems=array();
+			foreach ($value['CATALOG_ITEMS'] as $key => $value1) {
+				if($value1['PROPERTY_PRICE_VALUE']<= 1700 && $value1['PROPERTY_MATERIAL_VALUE'] == "Дерево, ткань" || $value1['PROPERTY_PRICE_VALUE'] < 1500 && $value1['PROPERTY_MATERIAL_VALUE']=="Металл, пластик" ){
+					$arFilterItems[]=$value1;
+					$count+=1 ;
+				}
+			}
+			$arResult["ITEMS"][$value['ID']]["CATALOG_ITEMS"] = $arFilterItems;
+			$arResult['COUNT_ITEMS'] = $count;
+		}
+
+		
+		
+			
+
+		return $arResult;
+	}
+
 	
-	unset($row);
-			$arResult['ITEMS'] = array_values($arResult['ITEMS']);
-        return $arResult;
-    }
-}?>
+	public function executeComponent()
+   	 {	
+		if($this->startResultCache())
+		{  
+			$this->arResult = $this->makeArNews($this->arParams["ID_NEWS"]);
+			$this->arResult = $this->makeArSections($this->arParams["ID_CATALOG"],$this->arParams["CODE_USER_PROP"],$this->arResult);
+			$this->arResult = $this->mexidAr($this->arParams["ID_CATALOG"],$this->arResult,$this->arParams["DETAIL_URL"]);
+			$this->arResult = $this->makeFinalAr($this->arResult);
+		}
+
+		if($_REQUEST["F"]){
+			$this->arResult = $this->Filter_F($this->arResult);
+		}
+		
+		$this->IncludeComponentTemplate();
+
+		global $APPLICATION;
+		$APPLICATION->SetTitle("В каталоге товаров представлено товаров: [".$this->arResult["COUNT_ITEMS"]."]");	
+		return $this->arResult;
+	}
+
+}
