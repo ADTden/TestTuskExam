@@ -1,3 +1,3 @@
 <? if (!defined('B_PROLOG_INCLUDED') || B_PROLOG_INCLUDED !== true) die();
 
-$APPLICATION->AddViewContent('var-x', $arResult['VAR_X']);
+//$APPLICATION->AddViewContent('var-x', $arResult['VAR_X']);

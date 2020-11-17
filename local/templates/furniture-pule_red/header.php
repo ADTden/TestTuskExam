@@ -123,10 +123,11 @@ $APPLICATION->IncludeFile(
 ?>
 					</div>
 				</div>
-				
+				<?$APPLICATION->ShowViewContent("sidebar")?>		
 				<div class="content-block">
 					<div class="content-block-inner">
-						
+
+									
 <?
 $APPLICATION->IncludeComponent("bitrix:search.form", "flat", Array(
 	"PAGE" => "#SITE_DIR#search/",

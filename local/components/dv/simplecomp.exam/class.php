@@ -1,5 +1,5 @@
 <?if(!defined("B_PROLOG_INCLUDED") || B_PROLOG_INCLUDED!==true) die();
-
+CModule::IncludeModule("iblock");
 class CDemoSqr extends CBitrixComponent
 {
     //Родительский метод проходит по всем параметрам переданным в $APPLICATION->IncludeComponent

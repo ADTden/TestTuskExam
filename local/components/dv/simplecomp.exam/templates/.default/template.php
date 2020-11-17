@@ -16,9 +16,14 @@
 </div>
 
 <?}?>
-<?
-$arResult['VAR_X'] = "<div style='color:red; margin: 34px 15px 35px 15px'>---Мин. цена: ".min($arPrices)." Макс. цена: ".max($arPrices)." ---</div>";
-$this->__component->setResultCacheKeys(array('VAR_X'));
-?>	
 
+<?$this->SetViewTarget("sidebar");?>
+
+    
+	<div style='color:red; margin: 34px 15px 35px 15px'>
+	---Мин. цена: <?=min($arPrices);?> Макс. цена: <?=max($arPrices);?> ---
+	</div>
+    
+
+<?$this->EndViewTarget();?>
 
