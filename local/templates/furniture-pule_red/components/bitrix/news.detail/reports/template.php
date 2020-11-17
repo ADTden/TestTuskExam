@@ -34,11 +34,11 @@ CJSCore::Init(array("jquery"));
 	<?
 	if($_REQUEST['ADD'] =="YES"){
 		?>
-		<p>Ваше мнение учтено, №<?=$_REQUEST['ID_REPORT']?></p>
+		<div class="yes"> Ваше мнение учтено, №<?=$_REQUEST['ID_REPORT']?></div>
 		<?
 	}else{?>
 		<?if($arParams["USE_AJAX_REPORT"] == "N"){?>
-			<a href="/local/templates/furniture-pule_red/components/bitrix/news.detail/reports/report.php?NEWS_ID=<?=$arResult["ID"];?>">Пожаловаться!</a>
+			<a href="?NEWS_ID=<?=$arResult["ID"];?>">Пожаловаться!</a>
 		<?}else{?>
 			<div class="js_report">Пожаловатся</div>
 		<?}?>
@@ -109,4 +109,48 @@ CJSCore::Init(array("jquery"));
 	}
 	?>
 </div>
-<script type="text/javascript" src="/local/templates/furniture-pule_red/components/bitrix/news.detail/reports/report.js" ></script>
+
+
+<?
+CModule::IncludeModule('iblock');
+if($_REQUEST["NEWS_ID"]){
+	$PROP = array();
+
+	global $USER;
+	if ($USER->IsAuthorized()){
+		$rsUser = CUser::GetByID($USER->GetID());
+		$arUser = $rsUser->Fetch();
+		$PROP[16]="";
+		//echo "<pre>"; print_r($arUser); echo "</pre>";
+		$PROP[16]=" ".$arUser["ID"]." ".$arUser["LOGIN"]." ".$arUser["NAME"]." ".$arUser["LAST_NAME"];
+	}else{
+		$PROP[16]="Не авторизован";
+	}
+
+		
+		
+	$el = new CIBlockElement;
+
+	
+	$PROP[17]=$_REQUEST["NEWS_ID"];
+
+
+	$arLoadProductArray = Array(
+	  "MODIFIED_BY"    => $USER->GetID(), // элемент изменен текущим пользователем
+	  "IBLOCK_SECTION_ID" => false,          // элемент лежит в корне раздела
+	  "IBLOCK_ID"      => 8,
+	  "PROPERTY_VALUES"=> $PROP,
+	  "NAME"           => "Жалоба на новость с ID ".$_REQUEST["NEWS_ID"],
+	  "ACTIVE"         => "Y",            // активен
+	  "DATE_ACTIVE_FROM" => date("d.m.Y"),
+	  );
+
+	if($PRODUCT_ID = $el->Add($arLoadProductArray)){
+		 echo "Ваше мнение учтено №".$PRODUCT_ID;
+		 if($_GET["NEWS_ID"])
+			 LocalRedirect("?ADD=YES&ID_REPORT=".$PRODUCT_ID);
+		 }else{
+	  echo "Ошибка!";
+	}
+}
+?>
