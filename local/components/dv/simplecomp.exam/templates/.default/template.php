@@ -6,10 +6,11 @@
 	<br>
 	<div class="name">[<?=$arItem["ID"]?>] <?=$arItem["LOGIN"]?></div>
 	<br>
-	<?foreach($arItem["CATALOG_ITEMS"] as $arCatItem){?>
+	<?foreach($arItem["NEWS"] as $arCatItem){?>
 		<div class="catalogs-item">
 			<div class="item"><?=$arCatItem["NAME"]?></div>
 		</div>
 	<?}?>
 </div>
 <?}?>	
+

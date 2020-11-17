@@ -17,64 +17,89 @@ class CDemoSqr extends CBitrixComponent
         return $result;
     }
 
-    public function makeArResult($CODE_AUTHOR,$CODE_USER_PROP,$id_news)
+    public function takeUsersList($CODE_USER_PROP)
     {
 		global $USER;
-	$arResult["ITEMS"] = array(); 
-	$arResult["ELEMENTS"] = array();
-	
-	$rsUser = CUser::GetByID($USER->GetID());
-	$arUser = $rsUser->Fetch();
-	
-	
-	$filter = Array($CODE_USER_PROP=>$arUser[$CODE_USER_PROP],"!ID"=>$USER->GetID());
-	
-	$rsElement = CUser::GetList(($by="NAME"), ($order="desc"), $filter); // выбираем пользователей
-	while ($row = $rsElement->Fetch())
-	{	
-		$id = (int)$row['ID'];
-		$arResult["ITEMS"][$id] = $row;
-		$arResult["ELEMENTS"][] = $id;
+		$arResult["ITEMS"] = array(); 
+		$arResult["ELEMENTS"] = array();
 		
-
+		$rsUser = CUser::GetByID($USER->GetID());
+		$arUser = $rsUser->Fetch();
 		
-
 		
-		$arrFilter = array (
-		"IBLOCK_ID" =>$id_news,
-		"IBLOCK_LID" => SITE_ID,
-		$CODE_AUTHOR => $row["ID"],
-		"ACTIVE" => "Y",
-		"PROPERTY_AUTHOR"=>$id,
-		"CHECK_PERMISSIONS" => $arParams['CHECK_PERMISSIONS'] ? "Y" : "N",
-		);
-	
-		$id1 =0;
-
-		$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","IBLOCK_ID","NAME","IBLOCK_SECTION_ID","PROPERTY_AUTHOR")); //Получаем элементы из разделов привязанных к новостям
-		while ($row1 = $rsElement1->Fetch())
-		{	$arResult["COUNT_ITEMS"][]=$row1["ID"];
-	
-			if($row1["PROPERTY_AUTHOR_VALUE"] == $USER->GetID()){
-				$arResult["USER"][] = $row1["ID"];
-			}
-			if(in_array( $row1["ID"], $arResult["USER"])){}else{
-			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1] = $row1;
-			$prop=CIBlockElement::GetByID($row1["ID"])->GetNextElement()->GetProperties();
+		$filter = Array($CODE_USER_PROP=>$arUser[$CODE_USER_PROP],"!ID"=>$USER->GetID());
+		
+		$rsElement = CUser::GetList(($by="NAME"), ($order="desc"), $filter); // выбираем пользователей
+		while ($row = $rsElement->Fetch())
+		{	
+			$id = (int)$row['ID'];
+			$arResult["ITEMS"][$id] = $row;
+			$arResult["ELEMENTS"][] = $id;
 			
-			$arResult["ITEMS"][$id]["CATALOG_ITEMS"][$id1]["DETAIL_URL"] =$row1["DETAIL_PAGE_URL"];
-			$id1=$id1+1;
-			}
 		}
 		unset($row);
-		
-		
-		
-	}
-	unset($row);
-
-	$arResult['ITEMS'] = array_values($arResult['ITEMS']);
-	$arResult["COUNT_ITEMS"] = array_unique($arResult["COUNT_ITEMS"]);
         return $arResult;
-    }
+	}
+	
+
+	public function makeArNews($CODE_AUTHOR,$id_news,$arResult)
+    {	global $USER;
+		$arrFilter = array (
+			"IBLOCK_ID" =>$id_news,
+			"IBLOCK_LID" => SITE_ID,
+			$CODE_AUTHOR => $arResult["ELEMENTS"],
+			"ACTIVE" => "Y",
+			"CHECK_PERMISSIONS" => $arParams['CHECK_PERMISSIONS'] ? "Y" : "N",
+			);
+		
+			$id1 =0;
+
+			$rsElement1 = CIBlockElement::GetList(false, $arrFilter , false, false, array("ID","IBLOCK_ID","NAME","IBLOCK_SECTION_ID","PROPERTY_AUTHOR")); 
+			while ($row1 = $rsElement1->Fetch())
+			{	$arResult["COUNT_ITEMS"][]=$row1["ID"];
+		
+				if($row1["PROPERTY_AUTHOR_VALUE"] == $USER->GetID()){
+					$arResult["USER"][] = $row1["ID"];
+				}
+				if(in_array( $row1["ID"], $arResult["USER"])){}else{
+				$arResult["NEWS"][]= $row1;
+			
+				$id1=$id1+1;
+				}
+			}
+			return $arResult;
+
+	}
+
+	public function makeFinalAr($arResult)
+    {
+		foreach ($arResult['ITEMS'] as $key => $value) {
+			foreach ($arResult['NEWS'] as $key => $value1) {
+				if($value["ID"] == $value1["PROPERTY_AUTHOR_VALUE"])
+				$arResult['ITEMS'][$value["ID"]]["NEWS"][]=$value1;
+				$news[]=$value1["ID"];
+			}
+		}
+			$arResult["COUNT_ITEMS"] = array_unique($news);
+			return $arResult;
+
+	}
+
+
+	public function executeComponent()
+   			 {	
+				if($this->startResultCache()){
+					
+					$this->arResult = $this->takeUsersList($this->arParams["CODE_USER_PROP"]);
+					$this->arResult = $this->makeArNews($this->arParams["ID_CATALOG"],$this->arParams["ID_NEWS"],$this->arResult);
+					$this->arResult = $this->makeFinalAr($this->arResult);
+
+
+					$this->IncludeComponentTemplate();
+				}
+
+				global $APPLICATION;
+				$APPLICATION->SetTitle("В каталоге товаров представлено товаров: [".count($this->arResult["COUNT_ITEMS"])."]");	
+				return $this->arResult;
+			}
 }?>
